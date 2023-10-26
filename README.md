@@ -21,6 +21,8 @@ app()->get(Support::class);
 
 Requires:
 
+Depends on Chrome binary and NodeJs Puppeteer library.
+
 - PHP 8.1
 
 ## Usage
