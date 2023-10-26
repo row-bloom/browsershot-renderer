@@ -28,8 +28,8 @@ Depends on Chrome binary and NodeJs Puppeteer library.
 ## Usage
 
 ```php
+use RowBloom\BrowsershotRenderer\BrowsershotRenderer;
 use RowBloom\RowBloom\Interpolators\PhpInterpolator;
-use RowBloom\RowBloom\Renderers\BrowsershotRenderer;
 use RowBloom\RowBloom\RowBloom;
 
 app()->get(RowBloom::class)
