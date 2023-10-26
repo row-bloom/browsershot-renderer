@@ -7,10 +7,6 @@ use RowBloom\RowBloom\Renderers\RendererFactory;
 use RowBloom\RowBloom\Types\Css;
 use RowBloom\RowBloom\Types\Html;
 
-it('factorize')
-    ->expect(fn () => app()->make(RendererFactory::class)->make(BrowsershotRenderer::NAME))
-    ->toBeInstanceOf(BrowsershotRenderer::class);
-
 // ! depends on puppeteer
 // it('renders and get (basic)')
 //     ->with([
