@@ -3,9 +3,9 @@
 namespace RowBloom\BrowsershotRenderer;
 
 use RowBloom\RowBloom\Config;
-use RowBloom\RowBloom\Drivers\RendererContract;
 use RowBloom\RowBloom\Fs\File;
 use RowBloom\RowBloom\Options;
+use RowBloom\RowBloom\Renderers\RendererContract;
 use RowBloom\RowBloom\Renderers\Sizing\LengthUnit;
 use RowBloom\RowBloom\Renderers\Sizing\Margin;
 use RowBloom\RowBloom\Types\Css;
@@ -60,20 +60,20 @@ class BrowsershotRenderer implements RendererContract
                 ->footerHtml($this->options->rawFooter ?? '');
         }
 
-        if (! is_null($config->getChromePath())) {
-            $browsershot->setChromePath($config->getChromePath());
+        if (! is_null($config->chromePath)) {
+            $browsershot->setChromePath($config->chromePath);
         }
 
-        if (! is_null($config->getNodeBinaryPath())) {
-            $browsershot->setNodeBinary($config->getNodeBinaryPath());
+        if (! is_null($config->nodeBinaryPath)) {
+            $browsershot->setNodeBinary($config->nodeBinaryPath);
         }
 
-        if (! is_null($config->getNpmBinaryPath())) {
-            $browsershot->setNpmBinary($config->getNpmBinaryPath());
+        if (! is_null($config->npmBinaryPath)) {
+            $browsershot->setNpmBinary($config->npmBinaryPath);
         }
 
-        if (! is_null($config->getNodeModulesPath())) {
-            $browsershot->setNodeModulePath($config->getNodeModulesPath());
+        if (! is_null($config->nodeModulesPath)) {
+            $browsershot->setNodeModulePath($config->nodeModulesPath);
         }
 
         $this->rendering = $browsershot->base64pdf();
