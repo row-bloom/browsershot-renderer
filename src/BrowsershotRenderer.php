@@ -24,6 +24,10 @@ class BrowsershotRenderer implements RendererContract
 
     protected Options $options;
 
+    public function __construct(protected ?Config $config = null)
+    {
+    }
+
     public function get(): string
     {
         return $this->rendering;
@@ -37,11 +41,12 @@ class BrowsershotRenderer implements RendererContract
             ->save($this->rendering);
     }
 
-    public function render(Html $html, Css $css, Options $options, Config $config): static
+    public function render(Html $html, Css $css, Options $options, Config $config = null): static
     {
         $this->html = $html;
         $this->css = $css;
         $this->options = $options;
+        $this->config = $config ?? $this->config;
 
         [$paperWidth, $paperHeight] = $this->options->resolvePaperSize(LengthUnit::MILLIMETER_UNIT);
 
@@ -60,20 +65,20 @@ class BrowsershotRenderer implements RendererContract
                 ->footerHtml($this->options->rawFooter ?? '');
         }
 
-        if (! is_null($config->chromePath)) {
-            $browsershot->setChromePath($config->chromePath);
+        if (! is_null($this->config->chromePath)) {
+            $browsershot->setChromePath($this->config->chromePath);
         }
 
-        if (! is_null($config->nodeBinaryPath)) {
-            $browsershot->setNodeBinary($config->nodeBinaryPath);
+        if (! is_null($this->config->nodeBinaryPath)) {
+            $browsershot->setNodeBinary($this->config->nodeBinaryPath);
         }
 
-        if (! is_null($config->npmBinaryPath)) {
-            $browsershot->setNpmBinary($config->npmBinaryPath);
+        if (! is_null($this->config->npmBinaryPath)) {
+            $browsershot->setNpmBinary($this->config->npmBinaryPath);
         }
 
-        if (! is_null($config->nodeModulesPath)) {
-            $browsershot->setNodeModulePath($config->nodeModulesPath);
+        if (! is_null($this->config->nodeModulesPath)) {
+            $browsershot->setNodeModulePath($this->config->nodeModulesPath);
         }
 
         $this->rendering = $browsershot->base64pdf();
