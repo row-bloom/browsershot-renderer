@@ -93,7 +93,7 @@ class BrowsershotRenderer implements RendererContract
             'rawHeader' => true,
             'rawFooter' => true,
             'printBackground' => true,
-            'preferCSSPageSize' => true,
+            'preferCssPageSize' => true,
             'landscape' => true,
             'format' => true,
             'width' => true,
