@@ -5,14 +5,14 @@ namespace RowBloom\BrowsershotRenderer;
 use RowBloom\RowBloom\Config;
 use RowBloom\RowBloom\Fs\File;
 use RowBloom\RowBloom\Options;
-use RowBloom\RowBloom\Renderers\RendererContract;
+use RowBloom\RowBloom\Renderers\Contract as RenderersContract;
 use RowBloom\RowBloom\Renderers\Sizing\LengthUnit;
 use RowBloom\RowBloom\Renderers\Sizing\Margin;
 use RowBloom\RowBloom\Types\Css;
 use RowBloom\RowBloom\Types\Html;
 use Spatie\Browsershot\Browsershot;
 
-class BrowsershotRenderer implements RendererContract
+class BrowsershotRenderer implements RenderersContract
 {
     public const NAME = 'Browsershot';
 
@@ -65,20 +65,25 @@ class BrowsershotRenderer implements RendererContract
                 ->footerHtml($this->options->rawFooter ?? '');
         }
 
-        if (! is_null($this->config->chromePath)) {
-            $browsershot->setChromePath($this->config->chromePath);
+        $chromePath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->chromePath;
+        $nodeBinaryPath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->nodeBinaryPath;
+        $npmBinaryPath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->npmBinaryPath;
+        $nodeModulesPath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->nodeModulesPath;
+
+        if (! is_null($chromePath)) {
+            $browsershot->setChromePath($chromePath);
         }
 
-        if (! is_null($this->config->nodeBinaryPath)) {
-            $browsershot->setNodeBinary($this->config->nodeBinaryPath);
+        if (! is_null($nodeBinaryPath)) {
+            $browsershot->setNodeBinary($nodeBinaryPath);
         }
 
-        if (! is_null($this->config->npmBinaryPath)) {
-            $browsershot->setNpmBinary($this->config->npmBinaryPath);
+        if (! is_null($npmBinaryPath)) {
+            $browsershot->setNpmBinary($npmBinaryPath);
         }
 
-        if (! is_null($this->config->nodeModulesPath)) {
-            $browsershot->setNodeModulePath($this->config->nodeModulesPath);
+        if (! is_null($nodeModulesPath)) {
+            $browsershot->setNodeModulePath($nodeModulesPath);
         }
 
         $this->rendering = $browsershot->base64pdf();

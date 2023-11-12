@@ -23,7 +23,14 @@ Requires:
 
 Depends on Chrome binary and NodeJs Puppeteer library.
 
-- PHP 8.1
+- PHP >= 8.1
+
+`spatie/browsershot` dependencies:
+
+- ext-exif
+- ext-fileinfo
+- ext-json
+- ext-mbstring
 
 ## Usage
 
