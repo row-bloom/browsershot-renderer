@@ -61,8 +61,8 @@ class BrowsershotRenderer implements RenderersContract
 
         if ($this->options->displayHeaderFooter) {
             $browsershot->showBrowserHeaderAndFooter()
-                ->headerHtml($this->options->rawHeader ?? '')
-                ->footerHtml($this->options->rawFooter ?? '');
+                ->headerHtml($this->options->headerTemplate ?? '')
+                ->footerHtml($this->options->footerTemplate ?? '');
         }
 
         $chromePath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->chromePath;
@@ -95,8 +95,8 @@ class BrowsershotRenderer implements RenderersContract
     {
         return [
             'displayHeaderFooter' => true,
-            'rawHeader' => true,
-            'rawFooter' => true,
+            'headerTemplate' => true,
+            'footerTemplate' => true,
             'printBackground' => true,
             'preferCssPageSize' => true,
             'landscape' => true,
