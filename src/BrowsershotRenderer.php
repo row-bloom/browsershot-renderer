@@ -48,6 +48,8 @@ class BrowsershotRenderer implements RenderersContract
         $this->options = $options;
         $this->config = $config ?? $this->config;
 
+        $browsershotConfig = $this->config?->getDriverConfig(BrowsershotConfig::class);
+
         [$paperWidth, $paperHeight] = $this->options->resolvePaperSize(LengthUnit::MILLIMETER_UNIT);
 
         $margin = Margin::fromOptions($this->options)->allRawIn(LengthUnit::MILLIMETER_UNIT);
@@ -59,31 +61,22 @@ class BrowsershotRenderer implements RenderersContract
             ->showBackground($this->options->printBackground)
             ->scale(1);
 
-        if ($this->options->displayHeaderFooter) {
-            $browsershot->showBrowserHeaderAndFooter()
-                ->headerHtml($this->options->headerTemplate ?? '')
-                ->footerHtml($this->options->footerTemplate ?? '');
+        $this->headerAndFooter($browsershot);
+
+        if (! is_null($browsershotConfig?->chromePath)) {
+            $browsershot->setChromePath($browsershotConfig?->chromePath);
         }
 
-        $chromePath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->chromePath;
-        $nodeBinaryPath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->nodeBinaryPath;
-        $npmBinaryPath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->npmBinaryPath;
-        $nodeModulesPath = $this->config?->getDriverConfig(BrowsershotConfig::class)?->nodeModulesPath;
-
-        if (! is_null($chromePath)) {
-            $browsershot->setChromePath($chromePath);
+        if (! is_null($browsershotConfig?->nodeBinaryPath)) {
+            $browsershot->setNodeBinary($browsershotConfig?->nodeBinaryPath);
         }
 
-        if (! is_null($nodeBinaryPath)) {
-            $browsershot->setNodeBinary($nodeBinaryPath);
+        if (! is_null($browsershotConfig?->npmBinaryPath)) {
+            $browsershot->setNpmBinary($browsershotConfig?->npmBinaryPath);
         }
 
-        if (! is_null($npmBinaryPath)) {
-            $browsershot->setNpmBinary($npmBinaryPath);
-        }
-
-        if (! is_null($nodeModulesPath)) {
-            $browsershot->setNodeModulePath($nodeModulesPath);
+        if (! is_null($browsershotConfig?->nodeModulesPath)) {
+            $browsershot->setNodeModulePath($browsershotConfig?->nodeModulesPath);
         }
 
         $this->rendering = $browsershot->base64pdf();
@@ -112,13 +105,31 @@ class BrowsershotRenderer implements RenderersContract
         ];
     }
 
+    // ------------------------------------------------------------
+
+    private function headerAndFooter(Browsershot $browsershot): void
+    {
+        if (! $this->options->displayHeaderFooter) {
+            return;
+        }
+
+        $header = $this->options->headerTemplate ?? '';
+
+        if ($this->config?->getDriverConfig(BrowsershotConfig::class)?->mergeGlobalCss) {
+            $header .= $this->css;
+        }
+
+        $browsershot->showBrowserHeaderAndFooter()
+            ->headerHtml($header)
+            ->footerHtml($this->options->footerTemplate ?? '');
+    }
+
     // ============================================================
     // Html
     // ============================================================
 
     private function html(): string
     {
-        // ? same happens in HtmlRenderer
         return <<<_HTML
             <!DOCTYPE html>
             <head>
